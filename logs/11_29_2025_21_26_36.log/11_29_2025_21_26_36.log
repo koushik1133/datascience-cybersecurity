@@ -1,0 +1,7 @@
+[ 2025-11-29 21:26:36,428 ] 164 numexpr.utils - INFO - NumExpr defaulting to 10 threads.
+[ 2025-11-29 21:26:38,745 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+[ 2025-11-29 21:26:38,749 ] 107 dagshub - INFO - Accessing as shagantikoushik
+[ 2025-11-29 21:26:38,943 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/shagantikoushik/datascience-cybersecurity "HTTP/1.1 200 OK"
+[ 2025-11-29 21:26:39,095 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+[ 2025-11-29 21:26:39,095 ] 107 dagshub - INFO - Initialized MLflow to track repo "shagantikoushik/datascience-cybersecurity"
+[ 2025-11-29 21:26:39,095 ] 107 dagshub - INFO - Repository shagantikoushik/datascience-cybersecurity initialized!

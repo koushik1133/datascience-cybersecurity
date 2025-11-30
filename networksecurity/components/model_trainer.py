@@ -1,6 +1,6 @@
 import os
 import sys
-
+import joblib
 from networksecurity.exception.exception import NetworkSecurityException 
 from networksecurity.log_util.logger import logging
 
@@ -46,8 +46,8 @@ class ModelTrainer:
             raise NetworkSecurityException(e,sys)
         
     # def track_mlflow(self,best_model,classificationmetric):
-    #     mlflow.set_registry_uri("https://dagshub.com/krishnaik06/networksecurity.mlflow")
-    #     tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+    #     # mlflow.set_registry_uri("https://dagshub.com/krishnaik06/networksecurity.mlflow")
+    #     # tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
     #     with mlflow.start_run():
     #         f1_score=classificationmetric.f1_score
     #         precision_score=classificationmetric.precision_score
@@ -59,19 +59,36 @@ class ModelTrainer:
     #         mlflow.log_metric("precision",precision_score)
     #         mlflow.log_metric("recall_score",recall_score)
     #         mlflow.sklearn.log_model(best_model,"model")
-    #         # Model registry does not work with file store
-    #         if tracking_url_type_store != "file":
+            # Model registry does not work with file store
+            # if tracking_url_type_store != "file":
 
-    #             # Register the model
-    #             # There are other ways to use the Model Registry, which depends on the use case,
-    #             # please refer to the doc for more information:
-    #             # https://mlflow.org/docs/latest/model-registry.html#api-workflow
-    #             mlflow.sklearn.log_model(best_model, "model", registered_model_name=best_model)
-    #         else:
-    #             mlflow.sklearn.log_model(best_model, "model")
+            #     # Register the model
+            #     # There are other ways to use the Model Registry, which depends on the use case,
+            #     # please refer to the doc for more information:
+            #     # https://mlflow.org/docs/latest/model-registry.html#api-workflow
+            #     mlflow.sklearn.log_model(best_model, "model", registered_model_name=best_model)
+            # else:
+            #     mlflow.sklearn.log_model(best_model, "model")
 
 
-        
+    def track_mlflow(self, best_model, classificationmetric):
+        with mlflow.start_run():
+            # --- 1. Log metrics ---
+            mlflow.log_metric("f1_score", classificationmetric.f1_score)
+            mlflow.log_metric("precision", classificationmetric.precision_score)
+            mlflow.log_metric("recall_score", classificationmetric.recall_score)
+
+            # --- 2. Save model locally ---
+            os.makedirs("mlflow_model", exist_ok=True)
+            model_path = "mlflow_model/model.pkl"
+            joblib.dump(best_model, model_path)
+
+            # --- 3. Log as MLflow artifact (SUPPORTED by DagsHub) ---
+            mlflow.log_artifact(model_path)
+
+            print("Model & metrics logged successfully (DAGsHub compatible).")
+
+
     def train_model(self,X_train,y_train,x_test,y_test):
         models = {
                 "Random Forest": RandomForestClassifier(verbose=1),
@@ -90,12 +107,12 @@ class ModelTrainer:
                 # 'criterion':['gini', 'entropy', 'log_loss'],
                 
                 # 'max_features':['sqrt','log2',None],
-                'n_estimators': [8,16,32,128,256]
+                'n_estimators': [8,128,256]
             },
             "Gradient Boosting":{
                 # 'loss':['log_loss', 'exponential'],
                 'learning_rate':[.1,.01,.05,.001],
-                'subsample':[0.6,0.7,0.75,0.85,0.9],
+                'subsample':[0.6,0.7,0.9],
                 # 'criterion':['squared_error', 'friedman_mse'],
                 # 'max_features':['auto','sqrt','log2'],
                 'n_estimators': [8,16,32,64,128,256]
