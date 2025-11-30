@@ -1,8 +1,14 @@
-FROM python:3.10-slim-buster
+# Use newer Debian base to avoid 404 errors
+FROM python:3.10-slim-bullseye
+
 WORKDIR /app
 COPY . /app
 
-RUN apt update -y && apt install awscli -y
+# Install dependencies and AWS CLI via pip
+RUN apt-get update -y && \
+    apt-get install -y unzip jq curl && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir awscli && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && pip install -r requirements.txt
 CMD ["python3", "app.py"]
