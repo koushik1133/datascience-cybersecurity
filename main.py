@@ -6,7 +6,7 @@ from networksecurity.log_util.logger import logging
 from networksecurity.entity.config_entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig
 from networksecurity.entity.config_entity import TrainingPipelineConfig
 
-# from networksecurity.components.model_trainer import ModelTrainer
+from networksecurity.components.model_trainer import ModelTrainer
 from networksecurity.entity.config_entity import ModelTrainerConfig
  
 
@@ -34,12 +34,12 @@ if __name__=='__main__':
         print(data_transformation_artifact)
         logging.info("data Transformation completed")
 
-        # logging.info("Model Training sstared")
-        # model_trainer_config=ModelTrainerConfig(trainingpipelineconfig)
-        # model_trainer=ModelTrainer(model_trainer_config=model_trainer_config,data_transformation_artifact=data_transformation_artifact)
-        # model_trainer_artifact=model_trainer.initiate_model_trainer()
+        logging.info("Model Training sstared")
+        model_trainer_config=ModelTrainerConfig(trainingpipelineconfig)
+        model_trainer=ModelTrainer(model_trainer_config=model_trainer_config,data_transformation_artifact=data_transformation_artifact)
+        model_trainer_artifact=model_trainer.initiate_model_trainer()
 
-        # logging.info("Model Training artifact created")
+        logging.info("Model Training artifact created")
         
         
         
