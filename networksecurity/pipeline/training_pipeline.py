@@ -33,7 +33,7 @@ import sys
 class TrainingPipeline:
     def __init__(self):
         self.training_pipeline_config=TrainingPipelineConfig()
-        # self.s3_sync = S3Sync()
+        self.s3_sync = S3Sync()
         
 
     def start_data_ingestion(self):
@@ -113,8 +113,8 @@ class TrainingPipeline:
             data_transformation_artifact=self.start_data_transformation(data_validation_artifact=data_validation_artifact)
             model_trainer_artifact=self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
             
-            # self.sync_artifact_dir_to_s3()
-            # self.sync_saved_model_dir_to_s3()
+            self.sync_artifact_dir_to_s3()
+            self.sync_saved_model_dir_to_s3()
             
             return model_trainer_artifact
         except Exception as e:
